@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录</title>
+    <link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+        body{
+            background: url("https://img1.gamersky.com/image2019/01/20190119_ddw_459_5/gamersky_07origin_13_20191191145579.jpg") fixed;
+            color:gray;
+        }
+    </style>
+    <script language="JavaScript" th:inline="javascript">
+        $(document).ready(function() {
+            var message = [[${errorMessage}]];
+            if(message!=null)
+                alert(message);
+
+            var retireveMessage = [[${retireveMessage}]];
+            if(retireveMessage != null)
+                alert(retireveMessage);
+
+            $("#adminId").blur(function () {
+                if (this.value=="") {
+                    $("#alert-adminId").text("用户账号不能为空");
+                    $("#submit").attr("disabled","disabled");
+                }
+                else{
+                    $("#alert-adminId").text("");
+                    $("#submit").removeAttr("disabled");
+                }
+            });
+
+            $("#password").blur(function () {
+                if (this.value=="") {
+                    $("#alert-pass").text("用户账号不能为空");
+                    $("#submit").attr("disabled","disabled");
+                }
+                else{
+                    $("#alert-pass").text("");
+                    $("#submit").removeAttr("disabled");
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+<h3 class="text-center">欢迎你</h3>
+<div class="login_info" style="height:auto;width:300px;margin-left: 530px;margin-top: 70px;">
+    <form action="/userLogin.do" method="post" class="form-horizontal" role="form">
+        <div class="form-group">
+            <label for="loginCode">用户账号:</label>
+            <input id="loginCode" class="form-control" type="text" name="loginCode" placeholder="请输入用户账号/手机号" autocomplete="none">
+            <!--手机号11位，用户账号10位-->
+            <span id="alert-adminId" class="text-danger " style="float: right"></span>
+        </div>
+        <div class="form-group">
+            <label for="password">用户密码:</label>
+            <input id="password" name="password" class="form-control form-inline" type="password" placeholder="请输入密码">
+            <span id="alert-pass" class="text-danger " style="float: right"></span>
+        </div>
+        <div class="form-group" style="margin-top:40px;">
+            <input  id="submit" name="submit" type="submit" class="btn btn-default" value="登录" style="width: 330px;margin: 0;">
+        </div>
+    </form>
+    <div class="other-select text-right" style="margin: 0;padding: 0;">
+        <p><a href="/forgotPass.com" >忘记用户账号or密码？</a></p>
+    </div>
+</div>
+</body>
+</html>

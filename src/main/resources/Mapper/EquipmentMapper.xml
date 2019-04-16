@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuri.Dao.EquipmentMapper">
+
+    <!--查询所有设备-->
+    <resultMap id="equipMap" type="com.yuri.pojo.Equipment">
+        <result column="equipId" property="equipId"/>
+        <result column="equipName" property="equipName"/>
+        <result column="labName" property="labName"/>
+        <result column="buyDate" property="buyDate"/>
+        <result column="lastServiceDate" property="lastServiceDate"/>
+        <result column="status" property="status"/>
+    </resultMap>
+    <select id="findEquipAll" resultMap="equipMap">
+        select * from t_equip
+    </select>
+
+    <!--根据id查询设备-->
+    <select id="findEquipById" parameterType="String" resultType="com.yuri.pojo.Equipment">
+        select * from t_equip where equipId = #{equipId}
+    </select>
+
+    <!--根据状态查询设备-->
+    <select id="findEquipByStatus" parameterType="String" resultMap="equipMap">
+        select * from t_equip where status = #{status}
+    </select>
+
+    <!--根据设备名查询-->
+    <select id="findEquipByName" parameterType="String" resultMap="equipMap">
+        select * from t_equip where equipName like "%"#{equipName}"%"
+    </select>
+
+    <!--根据实验室名称查询-->
+    <select id="findEquipBylabName" parameterType="String" resultMap="equipMap">
+        select * from t_equip where labName = #{labName}
+    </select>
+
+    <!--总数据的分页查询,一页10条数据-->
+    <select id="findEquipByPage" resultMap="equipMap">
+        select * from t_equip limit #{start},#{end}
+    </select>
+
+    <!--根据设备名称查询的数据进行分页-->
+    <select id="pagingEquipByName" resultMap="equipMap">
+        select * from (select * from t_equip where equipName like "%"#{keyValue}"%")a limit #{start},#{end}
+    </select>
+
+    <!--根据设备状态查询的数据进行分页-->
+    <select id="pagingEquipByStatus" resultMap="equipMap">
+        select * from (select * from t_equip where status = #{keyValue})b limit #{start},#{end}
+    </select>
+
+    <!--根据实验室名称进行分页-->
+    <select id="pagingEquipBylabname" resultMap="equipMap">
+        select * from (select * from t_equip where labName like "%"#{keyValue}"%")c limit #{start},#{end}
+    </select>
+
+    <!--添加新的设备-->
+    <sql id="equip-column">
+        <trim suffixOverrides=",">
+            <if test="equipId!=null">equipId,</if>
+            <if test="equipName">equipName,</if>
+            <if test="labName">labName,</if>
+            <if test="buyDate">buyDate,</if>
+            <if test="lastServiceDate">lastServiceDate,</if>
+        </trim>
+    </sql>
+    <sql id="equip-value">
+        <trim suffixOverrides=",">
+            <if test="equipId!=null">#{equipId},</if>
+            <if test="equipName">#{equipName},</if>
+            <if test="labName">#{labName},</if>
+            <if test="buyDate">#{buyDate},</if>
+            <if test="lastServiceDate">#{lastServiceDate},</if>
+        </trim>
+    </sql>
+    <insert id="addNewEquipment" parameterType="com.yuri.pojo.Equipment">
+        insert into t_equip (<include refid="equip-column"/>) values (<include refid="equip-value"/>)
+    </insert>
+
+    <!--更新设备信息-->
+    <update id="updateEquipment" parameterType="com.yuri.pojo.Equipment">
+        update t_equip
+        <set>
+            <trim suffixOverrides=",">
+                <if test="equipName!=null">equipName=#{equipName},</if>
+                <if test="equipName!=null">labName=#{labName},</if>
+                <if test="equipName!=null">buyDate=#{buyDate},</if>
+                <if test="equipName!=null">lastServiceDate=#{lastServiceDate},</if>
+                <if test="equipName!=null">status=#{status},</if>
+            </trim>
+        </set>
+        where equipId = #{equipId}
+    </update>
+
+    <!--删除制定设备信息-->
+    <delete id="deleteEquipment" parameterType="String">
+        delete from t_equip where equipId = #{equipId}
+    </delete>
+</mapper>

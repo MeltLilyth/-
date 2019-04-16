@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuri.Dao.UserMapper">
+    <resultMap id="userMap" type="com.yuri.pojo.User">
+        <result property="userId" column="userId"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="userSex" column="userSex"/>
+        <result property="hireDate" column="hireDate"/>
+        <result property="email" column="email"/>
+        <result property="phoneNumber" column="phoneNumber"/>
+        <result property="status" column="status"/>
+    </resultMap>
+    <!--查询所有用户-->
+    <select id="findUserAll" resultMap="userMap">
+        select * from t_user
+    </select>
+    <!--数据分页-->
+    <select id="pagingUserData" resultMap="userMap">
+        select * from t_user limit #{start},#{end}
+    </select>
+    <!--根据id查询用户-->
+    <select id="findUserById" parameterType="String" resultType="com.yuri.pojo.User">
+        select * from t_user where userId = #{userId}
+    </select>
+    <!--根据姓名查询用户-->
+    <select id="findUserByName" parameterType="String" resultMap="userMap">
+        select * from t_user where username like "%"#{username}"%"
+    </select>
+    <!--根据电话号码查询用户-->
+    <select id="findUserByPhone" resultType="com.yuri.pojo.User">
+        select * from t_user where phoneNumber = #{phoneNumber}
+    </select>
+    <!--根据邮箱地址查询用户-->
+    <select id="findUserByEmail" resultType="com.yuri.pojo.User">
+        select * from t_user where email = #{email}
+    </select>
+    <!--根据用户的角色查询用户-->
+    <select id="findUserByRole" resultMap="userMap" parameterType="String">
+        select * from t_user where role=#{role}
+    </select>
+    <sql id="user-column">
+        <trim suffixOverrides=",">
+            <if test="userId!=null">userId,</if>
+            <if test="username!=null">username,</if>
+            <if test="password!=null">password,</if>
+            <if test="userSex!=null">userSex,</if>
+            <if test="hireDate!=null">hireDate,</if>
+            <if test="email!=null">email,</if>
+            <if test="phoneNumber!=null">phoneNumber,</if>
+            <if test="role!=null">role,</if>
+        </trim>
+    </sql>
+    <sql id="user-value">
+        <trim suffixOverrides=",">
+            <if test="userId!=null">#{userId},</if>
+            <if test="username!=null">#{username},</if>
+            <if test="password!=null">#{password},</if>
+            <if test="userSex!=null">#{userSex},</if>
+            <if test="hireDate!=null">#{hireDate},</if>
+            <if test="email!=null">#{email},</if>
+            <if test="phoneNumber!=null">#{phoneNumber},</if>
+            <if test="role!=null">#{role},</if>
+        </trim>
+    </sql>
+    <!--新增用户-->
+    <insert id="addNewUser" parameterType="com.yuri.pojo.User">
+        insert into t_user (<include refid="user-column"/>) value(<include refid="user-value"/>)
+    </insert>
+
+    <!--更新用户信息-->
+    <update id="updateUser" parameterType="com.yuri.pojo.User">
+        update t_user
+        <set>
+            <trim suffixOverrides=",">
+                <if test="username!=null">username=#{username},</if>
+                <if test="password!=null">password=#{password},</if>
+                <if test="userSex!=null">userSex=#{userSex},</if>
+                <if test="phoneNumber!=null">phoneNumber=#{phoneNumber},</if>
+                <if test="email!=null">email=#{email},</if>
+                <if test="role!=null">role=#{role},</if>
+            </trim>
+        </set>
+        where userId = #{userId}
+    </update>
+
+    <!--删除指定用户-->
+    <delete id="deleteUser" parameterType="String">
+        delete from t_user where userId = #{userId}
+    </delete>
+</mapper>

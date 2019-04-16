@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuri.Dao.ServiceMapper">
+    <resultMap id="serviceMap" type="com.yuri.pojo.ServiceMessage">
+        <result column="serviceId" property="serviceId"/>
+        <result column="equipId" property="equipId"/>
+        <result column="equipName" property="equipName"/>
+        <result column="userId" property="userId"/>
+        <result column="username" property="username"/>
+        <result column="state" property="state"/>
+        <result column="serviceDate" property="serviceDate"/>
+        <result column="finishDate" property="finishDate"/>
+        <result column="process" property="process"/>
+    </resultMap>
+    <!--查询所有的维修账单-->
+    <select id="findServiceAll" resultMap="serviceMap">
+        select * from t_service
+    </select>
+    <!--根据受理状态查询账单-->
+    <select id="findServiceByStatus" parameterType="String" resultMap="serviceMap">
+        select * from t_service where state = #{state}
+    </select>
+    <!--记录分页-->
+    <select id="pagingServiceAll" resultMap="serviceMap">
+        select * from t_service limit #{start},#{end}
+    </select>
+    <select id="pagingServiceByStatus" resultMap="serviceMap">
+        select * from (select * from t_service where state= #{state})a limit #{start},#{end}
+    </select>
+    <!--根据billid 查询维修账单-->
+    <select id="findServiceByServiceId" parameterType="String" resultType="com.yuri.pojo.ServiceMessage">
+        select * from t_service where serviceId = #{serviceId}
+    </select>
+    <!--根据设备Id查询以前的账单编号-->
+    <select id="findServiceByEquipId" parameterType="String" resultMap="serviceMap">
+        select * from t_service where equipId = #{equipId}
+    </select>
+
+    <select id="findServiceByEquipIdAndStatus" resultType="com.yuri.pojo.ServiceMessage">
+        select * from t_service where equipId = #{equipId} and state = #{state}
+    </select>
+
+    <!--根据维修人员Id查询订单-->
+    <select id="findServiceByUserId" resultType="com.yuri.pojo.ServiceMessage">
+        select * from t_service where userId = #{userId} and state = #{state}
+    </select>
+
+    <sql id="service-column">
+        <trim suffixOverrides=",">
+            <if test="serviceId!=null">serviceId,</if>
+            <if test="equipId!=null">equipId,</if>
+            <if test="equipName!=null">equipName,</if>
+            <if test="userId!=null">userId,</if>
+            <if test="username!=null">username,</if>
+            <if test="state!=null">state,</if>
+            <if test="serviceDate!=null">serviceDate,</if>
+            <if test="finishDate!=null">finishDate,</if>
+            <if test="process!=null">process,</if>
+        </trim>
+    </sql>
+    <sql id="service-value">
+        <trim suffixOverrides=",">
+            <if test="serviceId!=null">#{serviceId},</if>
+            <if test="equipId!=null">#{equipId},</if>
+            <if test="equipName!=null">#{equipName},</if>
+            <if test="userId!=null">#{userId},</if>
+            <if test="username!=null">#{username},</if>
+            <if test="state!=null">#{state},</if>
+            <if test="serviceDate!=null">#{serviceDate},</if>
+            <if test="finishDate!=null">#{finishDate},</if>
+            <if test="process!=null">#{process},</if>
+        </trim>
+    </sql>
+    <!--添加新的维修服务-->
+    <insert id="addNewService" parameterType="com.yuri.pojo.ServiceMessage">
+        insert into t_service (<include refid="service-column"/>) values (<include refid="service-value"/>)
+    </insert>
+    <!--更新账单的维修信息-->
+    <update id="updateServiceOperation" parameterType="com.yuri.pojo.ServiceMessage">
+        update t_service
+        <set>
+            <trim suffixOverrides=",">
+                <if test="equipId!=null">equipId=#{equipId},</if>
+                <if test="equipName!=null">equipName=#{equipName},</if>
+                <if test="userId!=null">userId=#{userId},</if>
+                <if test="username!=null">username=#{username},</if>
+                <if test="state!=null">state=#{state},</if>
+                <if test="serviceDate!=null">serviceDate=#{serviceDate},</if>
+                <if test="finishDate!=null">finishDate=#{finishDate},</if>
+                <if test="process!=null">process=#{process},</if>
+            </trim>
+        </set>
+        where serviceId = #{serviceId}
+    </update>
+</mapper>

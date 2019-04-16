@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>实验设备管理系统</title>
+    <!--<link href="view/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">-->
+    <!--<script src="view/lib/jquery-3.3.1.min.js"></script>-->
+    <!--<script src="view/lib/bootstrap/js/bootstrap.min.js"></script>-->
+    <link href="view/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="view/lib/jquery-3.3.1.min.js"></script>
+    <script src="view/lib/bootstrap/js/bootstrap.min.js"></script>
+    <style>
+        a:hover{text-decoration: none;text-decoration-color: #2e6da4}
+        a:active{text-decoration: none;}
+        a:visited{text-decoration: none;}
+    </style>
+</head>
+<body>
+<div class="header">
+    <nav class="nav navbar-nav navbar-default navbar-fixed-top navbar-inverse">
+        <div class="container-fluid">
+            <div id="brand" class="navbar-brand"><a href="#index" data-toggle="tab">实验设备维修管理系统</a></div>
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav " style="padding-left:100px;">
+                    <li id="tab1" th:if="${user.role}=='设备管理员'"><a id="tab_1" href="#equipment" data-toggle="tab" >实验设备总览</a></li>
+                    <li id="tab4" th:if="${user.role}=='维修人员'"><a id="tab_4" href="#showEquipment" data-toggle="tab" >实验设备总览</a></li>
+                    <li id="tab2" th:if="${user.role}=='管理员'"><a id="tab_2" href="#userOperation" data-toggle="tab">在编人员总览</a></li>
+                    <li id="tab3" th:if="${user.role}=='设备管理员'"><a id="tab_3" href="#serviceProcess" data-toggle="tab" >维修进程总览</a></li>
+                    <li><a href="#personal" data-toggle="tab">个人信息编辑</a></li>
+                    <script language="JavaScript" th:inline="javascript">
+                        $("#brand").on("click",function(){
+                            $("li").removeClass("active");
+                            $("a").attr("aria-expanded",false);
+                        });
+                    </script>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</div>
+
+<div class="container" style="margin-top: 50px;">
+    <div class="tab-content">
+        <!--首页-->
+        <div id="index" class="tab-pane fade in active">
+            <h3 class="text-center" th:text="'欢迎您，'+${user.username}"></h3>
+            <div class="main-container">
+                <img src="view/lib/5945a23c98485_610.jpg" alt="" style="float:left;height:392px;width:457px;margin-left:50px;">
+                <div class="main-panel" style="float: right;display: inline-block;margin-right: 150px">
+                    <div th:if="${user.role}=='维修人员'" style="color: azure;height:60px;width:280px; background: steelblue;border-radius:10px;padding-left:10px;padding-right:10px;">
+                        <span class="glyphicon glyphicon-hourglass" style="font-size:large;margin-top:20px;"></span>
+                        <a id="tag_7" href="#showEquipment" data-toggle="tab" style="font-size: large;color: azure;line-height:60px;text-decoration: none;float: right;">
+                            实验设备信息总览</a>
+                    </div>
+                    <div th:if="${user.role}=='设备管理员'" style="color: azure;height:60px;width:280px; background: steelblue;border-radius:10px;padding-left:10px;padding-right:10px;">
+                        <span class="glyphicon glyphicon-hourglass" style="font-size:large;margin-top:20px;"></span>
+                        <a id="tag_1" href="#equipment" data-toggle="tab" style="font-size: large;color: azure;line-height:60px;text-decoration: none;float: right;">
+                            实验设备信息总览</a>
+                    </div>
+                    <div th:if="${user.role}=='管理员'" style="color: azure;height:60px;width:280px; background: mediumseagreen;border-radius:10px;padding-left:10px;padding-right:10px;margin-top: 30px;">
+                        <span class="glyphicon glyphicon-wrench" style="font-size:large;margin-top:20px;"></span>
+                        <a id="tag_2" href="#userOperation" data-toggle="tab" style="font-size: large;color: azure;line-height:60px;text-decoration: none;float: right;">
+                            维修人员信息总览</a>
+                    </div>
+                    <div th:if="${user.role}=='设备管理员'" style="color: azure;height:60px;width:280px; background: peru;border-radius:10px;padding-left:10px;padding-right:10px;margin-top: 30px;">
+                        <span class="glyphicon glyphicon-paperclip" style="font-size:large;margin-top:20px;"></span>
+                        <a id="tag_4" href="#serviceProcess" data-toggle="tab" style="font-size: large;color: azure;line-height:60px;text-decoration: none;float: right;">
+                            维修进度信息总览</a>
+                    </div>
+                    <div style="color: azure;height:60px;width:280px; background: lightseagreen;border-radius:10px;padding-left:10px;padding-right:10px;margin-top: 30px;">
+                        <span class="glyphicon glyphicon-cog" style="font-size:large;margin-top:20px;"></span>
+                        <a id="tag_5" href="#personal" data-toggle="tab" style="font-size: large;color: azure;line-height:60px;text-decoration: none;float: right;">
+                            用户个人信息设置</a>
+                    </div>
+                    <div style="color: azure;height:60px;width:280px; background: firebrick;border-radius:10px;padding-left:10px;padding-right:10px;margin-top: 30px;">
+                        <span class="glyphicon glyphicon-off" style="font-size:large;margin-top:20px;"></span>
+                        <a id="tag_6" href="#" style="font-size: large;color: azure;line-height:60px;text-decoration: none;float: right;">
+                            退出设备管理系统</a>
+                        <script language="JavaScript" th:inline="javascript">
+                        </script>
+                    </div>
+                </div>
+                <script language="JavaScript" th:inline="javascript">
+                    $("#tag_6").on("click",function(){
+                       window.location.href = "loginout.do";
+                    });
+                </script>
+            </div>
+        </div>
+        <!--设备页面(维修人员)-->
+        <div id="showEquipment" class="tab-pane fade in">
+            <div class="main-panel" style="float:left;display: inline-block;margin-top:20px;margin-left:50px;">
+                <div style="color: azure;height:60px;width:260px; background: steelblue;border-radius:10px;padding-left:10px;padding-right:10px;">
+                    <span class="glyphicon glyphicon-hourglass" style="font-size:large;margin-top:20px;"></span>
+                    <a id="showTag_1" href="#" data-toggle="tab" style="font-size: large;color: azure;line-height:60px;text-decoration: none;float: right;">
+                        所有设备</a>
+                </div>
+                <div style="color: azure;height:60px;width:260px; background: #3c763d;border-radius:10px;padding-left:10px;padding-right:10px;margin-top: 30px;">
+                    <span class="glyphicon glyphicon-alert" style="font-size:large;margin-top:20px;"></span>
+                    <a id="showTag_2" href="#" data-toggle="tab" style="font-size: large;color: azure;line-height:60px;text-decoration: none;float: right;">
+                        可用设备</a>
+                </div>
+                <div style="color: azure;height:60px;width:260px; background: firebrick;border-radius:10px;padding-left:10px;padding-right:10px;margin-top: 30px;">
+                    <span class="glyphicon glyphicon-alert" style="font-size:large;margin-top:20px;"></span>
+                    <a id="showTag_3" href="#" data-toggle="tab" style="font-size: large;color: azure;line-height:60px;text-decoration: none;float: right;">
+                        维护设备</a>
+                </div>
+                <script language="JavaScript" th:inline="javascript">
+                    $("#showTag_1").on("click",function(){
+                        $("#showResult").load("showResultTab.do?tab=tab1&userId="+[[${user.userId}]]);
+                    });
+                    $("#showTag_2").on("click",function(){
+
+                    });
+                    $("#showTag_3").on("click",function(){});
+                </script>
+            </div>
+            <div id="showResult" class="panel panel-default" style="width:700px;float:right;margin-top: 20px;">
+                <div class="panel-body" style="height:428px;padding:0;" th:fragment="showResult">
+                    <table class="table table-bordered text-center" style="width:700px;">
+                        <thead>
+                        <tr>
+                            <td>设备编号</td>
+                            <td>设备名称</td>
+                            <td>所属实验室</td>
+                            <td>购买时间</td>
+                            <td>上一次维护时间</td>
+                            <td>状态</td>
+                            <td>操作</td>
+                        </tr>
+                        </thead>
+                        <tbody id="showBody">
+                        <tr th:each="equipment:${showList.dataList}">
+                            <td th:text="${equipment.equipId}"></td>
+                            <td th:text="${equipment.equipName}"></td>
+                            <td th:text="${equipment.labName}"></td>
+                            <td th:text="${#dates.format(equipment.buyDate,'yyyy-MM-dd')}"></td>
+                            <td th:text="${#dates.format(equipment.lastServiceDate,'yyyy-MM-dd')}"></td>
+                            <td class="state" th:text="${equipment.status}"></td>
+                            <td><input type="button" class="btn btn-warning btn-xs" value="接收维护" onclick="acceptTask(this)"></td>
+                        </tr>
+                        </tbody>
+                        <script language="JavaScript" th:inline="javascript">
+                            $(document).ready(function(){
+
+                                if($("#showBody").children().length==0){
+                                    var result = "<tr id='showDemoResult'><td class='text-center'>没有相关信息</td></tr>";
+                                    $("#showBody").append(result);
+                                    $("#showfooter").hide();
+                                }
+                                else{
+                                    $("#showDemoResult").remove();
+                                    $("#showfooter").show();
+                                }
+
+                                $("tr").each(function(){
+                                    $(this).children("td").each(function(){
+                                        if($(this).hasClass("state")) {
+                                            if($(this).text()=="需要维护"){
+                                                $(this).parent("tr").find("input.btn-warning").removeAttr("disabled");
+                                            }
+                                            else{
+                                                $(this).parent("tr").find("input.btn-warning").attr("disabled","disabled");
+                                            }
+                                        }
+                                    });
+                                });
+                            });
+
+                            function acceptTask(button){
+                                var equipId = $(button).parent("td").parent("tr").find("td")[0];
+                                $("#showResult").load("acceptTask.do?equipId="+$(equipId).text()+"&userId="+[[${user.userId}]]);
+                            }
+                        </script>
+                    </table>
+                </div>
+                <div id="showfooter" class="panel-footer" style="height:40px;padding:0;" th:fragment="showResult">
+                    <nav aria-label="Page navigation" style="display:inline-block;padding:0;margin-left: 150px;height:40px;">
+                        <ul id="show_pageNation" class="pagination pagination-sm" style="margin-top:5px;line-height:20px">
+                            <li></li>
+                            <li>
+                                <a id="show_previousPage" href="#"  aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            <li class="pageNation" th:each="columnNum:${showList.column}">
+                                <a class="pageNation" href="#" th:text="${columnNum}"></a>
+                            </li>
+                            <li>
+                                <a id="show_nextPage" href="#" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                            <li></li>
+                            <li id="show_skip" style="margin-left:50px;">
+                                到第
+                                <input id="show_skipNum" type="text" placeholder="" style="width:30px;" maxlength="3">
+                                页
+                                <input id="show_pageSubmit" type="submit" value="跳转" class="btn btn-default" style="height:26px;margin-left:5px;line-height:10px">
+                            </li>
+                        </ul>
+                        <script language="JavaScript" th:inline="javascript">
+                            $(document).ready(function(){
+                                $("#show_pageNation").each(function(){
+                                    $(this).find("li.pageNation").each(function (){
+                                        var item = $(this).find("a.pageNation");
+                                        if($(item).text()==[[${showList.currentnNum}]]){
+                                            $(this).find("a.pageNation").removeAttr("href").removeAttr("onclick");
+                                        }
+                                        else{
+                                            $(this).find("a.pageNation").attr("href","#").attr("onclick","skipShowNumClick(this)");
+                                        }
+                                    });
+                                });
+
+                                var num = [[${showList.currentnNum}]];
+                                if(num === 1){
+                                    $("#show_previousPage").removeAttr("href").removeAttr("onclick");
+                                }
+                                else{
+                                    $("#show_previousPage").attr("href","#").attr("onclick","previousShowPageClick()");
+                                }
+
+                                if(num === [[${showList.totalPage}]]){
+                                    $("#show_nextPage").removeAttr("href").removeAttr("onclick");
+                                }
+                                else{
+                                    $("#show_nextPage").attr("href","#").attr("onclick","nextShowPageClick()");
+                                }
+                            });
+
+                            function skipShowNumClick(item){
+                                $("#showResult").load("skipShowNum.do?currentPage="+$(item).text()+"&keyValue="+[[${showList.key}]]+"&userId="+[[${user.userId}]]);
+                            }
+
+                            function previousShowPageClick(){
+                                var num = [[${showList.currentnNum}]];
+                                if(num === 1){
+                                    return ;
+                                }
+
+                                $("#showResult").load("skipShowNum.do?currentPage="+(num-1)+"&keyValue="+[[${showList.key}]]+"&userId="+[[${user.userId}]]);
+                            }
+
+                            function nextShowPageClick(){
+                                var num = [[${showList.currentnNum}]];
+                                if(num === [[${showList.totalPage}]]){
+                                    return ;
+                                }
+
+                                $("#showResult").load("skipShowNum.do?currentPage="+(num+1)+"&keyValue="+[[${showList.key}]]+"&userId="+[[${user.userId}]]);
+                            }
+
+                            $("#show_pageSubmit").on("click",function(){
+                                var num = $("#show_skipNum").val();
+                                $("#show_skipNum").val("");
+                                if(num !=" " && num !=null){
+                                    if(num>=1 && num<[[${showList.totalPage}]]){
+                                        $("#showResult").load("skipShowNum.do?currentPage="+num+"&keyValue="+[[${showList.key}]]+"&userId="+[[${user.userId}]]);
+                                    }
+                                }
+                            });
+                        </script>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <!--设备页面-->
+        <div id="equipment" class="tab-pane fade in">
+            <div class="main-panel" style="float:left;display: inline-block;margin-top:20px;margin-left:50px;">
+                <div style="width:260px;height:160px;border-radius:10px;padding-left:10px;padding-right:10px;border: 1px ridge;">
+                    <h4 class="text-center">快速搜索</h4>
+                    <input class="form-control" id="equipRelatedInformation" type="text" placeholder="请输入设备的id/名称/所属实验室" autocomplete="off"><br>
+                    <div class="btn-group" role="group">
+                        <button id="equipCommit" class="btn btn-default" style="width:100px;">搜索</button>
+                        <button id="equipClear" class="btn btn-default" style="width:100px;margin-left:36px;">清空</button>
+                    </div>
+                    <script language="JavaScript" th:inline="javascript">
+                        $("#equipCommit").on("click",function(){
+                            var relatedInformation = $("#equipRelatedInformation").val();
+                            $("#equipRelatedInformation").val("");
+                            $("#equipResult").load("/equipSearch.do?relatedInformation="+relatedInformation);
+                        });
+                        $("#equipcClear").on("click",function(){
+                            $("#equipRelatedInformation").val("");
+                        });
+                    </script>
+                </div>
+                <div style="color: azure;height:60px;width:260px; background: steelblue;border-radius:10px;padding-left:10px;padding-right:10px;margin-top: 20px;">
+                    <span class="glyphicon glyphicon-hourglass" style="font-size:large;margin-top:20px;"></span>
+                    <a id="equipTag_1" href="#" data-toggle="tab" style="font-size: large;color: azure;line-height:60px;text-decoration: none;float: right;">
+                        所有设备</a>
+                </div>
+                <div style="color: azure;height:60px;width:260px; background: mediumseagreen;border-radius:10px;padding-left:10px;padding-right:10px;margin-top: 30px;">
+                    <span class="glyphicon glyphicon-ok" style="font-size:large;margin-top:20px;"></span>
+                    <a id="equipTag_2" href="#" data-toggle="tab" style="font-size: large;color: azure;line-height:60px;text-decoration: none;float: right;">
+                        可用设备</a>
+                </div>
+                <div style="color: azure;height:60px;width:260px; background: firebrick;border-radius:10px;padding-left:10px;padding-right:10px;margin-top: 30px;">
+                    <span class="glyphicon glyphicon-alert" style="font-size:large;margin-top:20px;"></span>
+                    <a id="equipTag_3" href="#" data-toggle="tab" style="font-size: large;color: azure;line-height:60px;text-decoration: none;float: right;">
+                        维护设备</a>
+                </div>
+                <div style="color: azure;height:60px;width:260px; background: chocolate;border-radius:10px;padding-left:10px;padding-right:10px;margin-top: 30px;">
+                    <span class="glyphicon glyphicon-wrench" style="font-size:large;margin-top:20px;"></span>
+                    <a id="equipTag_4" href="#" data-toggle="tab" style="font-size: large;color: azure;line-height:60px;text-decoration: none;float: right;">
+                        维护中的设备</a>
+                </div>
+                <script language="JavaScript" th:inline="javascript">
+                    $("#equipTag_1").on("click",function(){
+                        $("#equipResult").load("tabEquip.do?keyValue=tag1");
+                    });
+                    $("#equipTag_2").on("click",function(){
+                        $("#equipResult").load("tabEquip.do?keyValue=tag2");
+                    });
+                    $("#equipTag_3").on("click",function(){
+                        $("#equipResult").load("tabEquip.do?keyValue=tag3");
+                    });
+                    $("#equipTag_4").on("click",function(){
+                        $("#equipResult").load("tabEquip.do?keyValue=tag4");
+                    });
+                </script>
+            </div>
+            <div id="equipResult" class="panel panel-default" style="width:800px;float:right;margin-top: 20px;">
+                <div class="panel-body" style="height:428px;padding:0;" th:fragment="equipResult">
+                    <table  class="table table-hover table-bordered text-center">
+                        <thead>
+                        <tr>
+                            <td>#</td>
+                            <td>设备编号</td>
+                            <td>设备名称</td>
+                            <td>所属实验室</td>
+                            <td>购买时间</td>
+                            <td>上一次维护时间</td>
+                            <td>设备状态</td>
+                            <td colspan="3">操作</td>
+                        </tr>
+                        </thead>
+                        <tbody id="equipBody" class="table-bordered">
+                            <tr th:each="equipment:${equipList.dataList}">
+                                <td class="checked"><input type="checkbox" placeholder=""></td>
+                                <td class="equipId" th:text="${equipment.equipId}"></td>
+                                <td th:text="${equipment.equipName}"></td>
+                                <td th:text="${equipment.labName}"></td>
+                                <td th:text="${#dates.format(equipment.buyDate,'yyyy-MM-dd')}"></td>
+                                <td th:text="${#dates.format(equipment.lastServiceDate,'yyyy-MM-dd')}"></td>
+                                <td class="status" th:text="${equipment.status}"></td>
+                                <td><input type="button" class="btn btn-xs btn-danger" value="删除" onclick="deleteEquipment(this)"></td>
+                                <td><input type="button" class="btn btn-xs btn-warning" value="报修" onclick="repairEquipment(this)"></td>
+                                <td><input type="button" class="btn btn-xs btn-success" value="编辑" onclick="skipEditor(this)"></td>
+                            </tr>
+                        </tbody>
+                        <script language="JavaScript" th:inline="javascript">
+                            $(document).ready(function(){
+                                if($("#equipBody").children().length == 0){
+                                    var result = "<tr id='equipQueryResult'><td colspan='10'>没有相关数据</td></tr>";
+                                    $("#equipBody").append(result);
+                                    $("#equipfooter").hide();
+                                }
+                                else{
+                                    $("#equipQueryResult").remove();
+                                    $("#equipfooter").show();
+                                }
+
+                                $("tr").each(function(){
+                                    $(this).children("td").each(function(){
+                                        if($(this).hasClass("status")) {
+                                            switch($(this).text()){
+                                                case "可用":
+                                                    $(this).parent("tr").addClass("success");
+                                                    $(this).parent("tr").find("input.btn-warning").removeAttr("disable");
+                                                    break;
+                                                case "维护中":
+                                                    $(this).parent("tr").addClass("warning");
+                                                    $(this).parent("tr").find("input.btn-warning").attr("disabled","disabled");
+                                                    break;
+                                                case "需要维护":
+                                                    $(this).parent("tr").addClass("danger");
+                                                    $(this).parent("tr").find("input.btn-warning").attr("disabled","disabled");
+                                                    break;
+                                                default:
+                                                    break;
+                                            }
+                                        }
+                                    });
+                                });
+                            });
+                            //点击编辑跳转界面
+                            function skipEditor(button){
+                                var equipId = $(button).parent("td").parent("tr").find("td")[1];
+                                var equipName = $(button).parent("td").parent("tr").find("td")[2];
+                                var labName = $(button).parent("td").parent("tr").find("td")[3];
+
+                                $("#equipId").val($(equipId).text());
+                                $("#equipName").val($(equipName).text());
+                                $("#labName").val($(labName).text());
+
+                                $("#equipModal").modal({
+                                    backdrop: false, // 相当于data-backdrop
+                                    keyboard: false, // 相当于data-keyboard
+                                    show: true, // 相当于data-show
+                                    remote: "" // 相当于a标签作为触发器的href
+                                });
+                            }
+                            //点击报修改变设备的状态
+                            function repairEquipment(button){
+                                var item = $(button).parent("td").parent("tr").find("td")[1];
+                                $("#equipResult").load("repairEquip.do?equipId="+$(item).text());
+                            }
+                            //点击删除按钮删除该条数据
+                            function deleteEquipment(button){
+                                var item = $(button).parent("td").parent("tr").find("td")[1];
+                                $("#equipResult").load("deleteEquip.do?equipId="+$(item).text());
+                            }
+                        </script>
+                    </table>
+                </div>
+                <div id="equipfooter" class="panel-footer" style="height:40px;padding:0;" th:fragment="equipResult">
+                    <div class="btnGrop" style="display: inline-block;margin-left:20px;">
+                        <input id="addEquipbtn" type="button" class="btn btn-success btn-xs" value="新增">
+                        <input id="deleteGroupbtn" type="button" class="btn btn-danger btn-xs" value="删除" style="margin-left: 10px" onclick="">
+                        <script language="JavaScript" th:inline="javascript">
+                            $("#addEquipbtn").on("click",function(){
+                                $("#newEquipModal").modal({
+                                    backdrop: false, // 相当于data-backdrop
+                                    keyboard: false, // 相当于data-keyboard
+                                    show: true, // 相当于data-show
+                                    remote: "" // 相当于a标签作为触发器的href
+                                });
+                            });
+
+                            $("#deleteGroupbtn").on("click",function(){
+                                var index = 0;
+                                var arrays = new Array();
+                                $("tr").each(function(){
+                                    $(this).children("td.checked").each(function(){
+                                        if($(this).children().prop("checked")){
+                                            var equipId = $(this).parent("tr").find("td.equipId").text();
+                                            arrays[index] = equipId;
+                                            index++;
+                                        }
+                                    });
+                                });
+                                $("#equipResult").load("deleteGroup.do?arrays="+arrays);
+                            });
+                        </script>
+                    </div>
+                    <nav aria-label="Page navigation" style="display:inline-block;padding:0;margin-left: 150px;height:40px;">
+                        <ul id="pageNation" class="pagination pagination-sm" style="margin-top:5px;line-height:20px">
+                            <li></li>
+                            <li>
+                                <a id="previousPage" href="#"  aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            <li class="pageNation" th:each="columnNum:${equipList.column}">
+                                <a class="pageNation" href="#" th:text="${columnNum}"></a>
+                            </li>
+                            <li>
+                                <a id="nextPage" href="#" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                            <li></li>
+                            <li id="skip" style="margin-left:50px;">
+                                到第
+                                <input id="skipNum" type="text" placeholder="" style="width:30px;" maxlength="3">
+                                页
+                                <input id="pageSubmit" type="submit" value="跳转" class="btn btn-default" style="height:26px;margin-left:5px;line-height:10px">
+                            </li>
+                            <script language="JavaScript" th:inline="javascript">
+                                $(document).ready(function(){
+                                   $("#pageNation").each(function(){
+                                       $(this).find("li.pageNation").each(function (){
+                                           var item = $(this).find("a.pageNation");
+                                           if($(item).text()==[[${equipList.currentnNum}]]){
+                                               $(this).find("a.pageNation").removeAttr("href").removeAttr("onclick");
+                                           }
+                                           else{
+                                               $(this).find("a.pageNation").attr("href","#").attr("onclick","skipNumClick(this)");
+                                           }
+                                       });
+                                   });
+
+                                    var num = [[${equipList.currentnNum}]];
+                                    if(num === 1){
+                                        $("#previousPage").removeAttr("href").removeAttr("onclick");
+                                    }
+                                    else{
+                                        $("#previousPage").attr("href","#").attr("onclick","previousPageClick()");
+                                    }
+
+                                    if(num === [[${equipList.totalPage}]]){
+                                        $("#nextPage").removeAttr("href").removeAttr("onclick");
+                                    }
+                                    else{
+                                        $("#nextPage").attr("href","#").attr("onclick","nextPageClick()");
+                                    }
+                                });
+
+                                function skipNumClick(item){
+                                    $("#equipResult").load("skipEquipPage.do?currentPage="+$(item).text()+"&keyValue="+[[${equipList.key}]]);
+                                }
+
+                                function nextPageClick(){
+                                    var num = [[${equipList.currentnNum}]];
+                                    if(num === [[${equipList.totalPage}]]){
+                                        return;
+                                    }
+                                    $("#equipResult").load("skipEquipPage.do?currentPage="+(num+1)+"&keyValue="+[[${equipList.key}]]);
+                                }
+
+                                function previousPageClick(){
+                                    var num = [[${equipList.currentnNum}]];
+                                    if(num == 1){
+                                        return;
+                                    }
+                                    $("#equipResult").load("skipEquipPage.do?currentPage="+(num-1)+"&keyValue="+[[${equipList.key}]]);
+                                }
+
+                                $("#pageSubmit").on("click",function(){
+                                   var num = $("#skipNum").val();
+                                   $("#skipNum").val("");
+                                   if(num !=" " && num !=null){
+                                       if(num>=1 && num<[[${equipList.totalPage}]]){
+                                           $("#equipResult").load("skipEquipPage.do?currentPage="+num+"&keyValue="+[[${equipList.key}]])
+                                       }
+                                   }
+                                });
+                            </script>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <!--人员管理页面-->
+        <div id="userOperation" class="tab-pane fade in" >
+            <div class="main-panel" style="float:left;display: inline-block;margin-top:20px;margin-left: 30px;">
+                <div style="width:260px;height:200px;border-radius:10px;padding-left:10px;padding-right:10px;border: 1px ridge;">
+                    <h4 class="text-center">快速搜索</h4>
+                    <input class="form-control" id="userRelatedInformation" type="text" placeholder="请输入人员的编号/姓名" autocomplete="off"><br>
+                    <div class="btn-group" role="group">
+                        <button id="userCommit" class="btn btn-default" style="width:100px;">搜索</button>
+                        <button id="userClear" class="btn btn-default" style="width:100px;margin-left:36px;">清空</button>
+                    </div>
+                    <script language="JavaScript" th:inline="javascript">
+                        $("#userCommit").on("click",function (){
+                            var keyValue = $("#userRelatedInformation").val();
+                            $("#userRelatedInformation").val("");
+                            $("#userResult").load("conditionQuery.do?keyValue="+keyValue);
+                        });
+
+                        $("#userClear").on("click",function(){
+                           $("#userRelatedInformation").val("");
+                        });
+                    </script>
+                </div>
+
+                <div style="color: azure;height:60px;width:260px; background: steelblue;border-radius:10px;padding-left:10px;padding-right:20px;margin-top:20px;">
+                    <span class="glyphicon glyphicon-hourglass" style="font-size:large;margin-top:20px;"></span>
+                    <a id="userTag_1" href="#equipment" data-toggle="tab" style="font-size: large;color: azure;line-height:60px;text-decoration: none;float: right;">
+                        所有人员</a>
+                </div>
+
+                <div style="color: azure;height:60px;width:260px; background: mediumseagreen;border-radius:10px;padding-left:10px;padding-right:10px;margin-top: 30px;">
+                    <span class="glyphicon glyphicon-wrench" style="font-size:large;margin-top:20px;"></span>
+                    <a id="userTag_2" href="#" data-toggle="tab" style="font-size: large;color: azure;line-height:60px;text-decoration: none;float: right;">
+                        维修人员</a>
+                </div>
+                <div style="color: azure;height:60px;width:260px; background: firebrick;border-radius:10px;padding-left:10px;padding-right:10px;margin-top: 30px;">
+                    <span class="glyphicon glyphicon-user" style="font-size:large;margin-top:20px;"></span>
+                    <a id="userTag_3" href="#" data-toggle="tab" style="font-size: large;color: azure;line-height:60px;text-decoration: none;float: right;">
+                        设备管理员</a>
+                </div>
+                <script language="JavaScript" th:inline="javascript">
+                    $("#userTag_1").on("click",function(){
+                        $("#equipResult").load("queryResult.do?role=All");
+                    });
+                    $("#userTag_2").on("click",function(){
+                        $("#equipResult").load("queryResult.do?role=维修人员");
+                    });
+                    $("#userTag_3").on("click",function(){
+                        $("#equipResult").load("queryResult.do?role=设备管理员");
+                    });
+                </script>
+            </div>
+            <div id="userResult" class="panel panel-default" style="width:850px;float:right;margin-top: 20px;margin-right: -20px">
+                <div class="panel-body" style="height:428px;padding:0;" th:fragment="userResult">
+                    <table  class="table table-bordered text-center">
+                        <thead>
+                        <tr>
+                            <td>#</td>
+                            <td>人员编号</td>
+                            <td>姓名</td>
+                            <td>性别</td>
+                            <td>入职时间</td>
+                            <td>邮箱地址</td>
+                            <td>手机号码</td>
+                            <td>职务</td>
+                            <td colspan="2">操作</td>
+                        </tr>
+                        </thead>
+                        <tbody id="userBody" class="table-bordered">
+                        <tr th:each="user:${userList.dataList}">
+                            <td class="checked"><input type="checkbox" placeholder=""></td>
+                            <td class="userId" th:text="${user.userId}"></td>
+                            <td th:text="${user.username}"></td>
+                            <td th:text="${user.userSex}"></td>
+                            <td th:text="${#dates.format(user.hireDate,'yyyy-MM-dd')}"></td>
+                            <td th:text="${user.phoneNumber}"></td>
+                            <td th:text="${user.email}"></td>
+                            <td th:text="${user.role}"></td>
+                            <!--只能修改权限-->
+                            <td><input type="button" class="btn btn-xs btn-success" value="编辑" onclick="skipUserEditor(this)"></td>
+                            <td><input type="button" class="btn btn-xs btn-danger" value="删除" onclick="deleteUser(this)"></td>
+                        </tr>
+                        <script language="JavaScript" th:inline="javascript">
+                            $(document).ready(function(){
+                               if($("#userBody").children().length == 0){
+                                   var result = "<tr id='userQueryResult'><td colspan='10'>没有相关数据</td></tr>";
+                                   $("#userBody").append(result);
+                                   $("#userfooter").hide();
+                               }
+                               else{
+                                   $("#userQueryResult").remove();
+                                   $("#userfooter").show();
+                               }
+                            });
+
+                            function skipUserEditor(button){
+                                var userId = $(button).parent("td").parent("tr").find("td")[1];
+                                var username = $(button).parent("td").parent("tr").find("td")[2];
+                                var role = $(button).parent("td").parent("tr").find("td")[7];
+
+                                $("#up-userId").val($(userId).text());
+                                $("#up-username").val($(username).text());
+                                $("#up-role").val($(role).text());
+
+                                $("#updateUserModal").modal({
+                                    backdrop: false, // 相当于data-backdrop
+                                    keyboard: false, // 相当于data-keyboard
+                                    show: true, // 相当于data-show
+                                    remote: "" // 相当于a标签作为触发器的href
+                                });
+                            }
+
+                            function deleteUser(button){
+                                var userId = $(button).parent("td").parent("tr").find("td")[1];
+                                $("#userResult").load("/delUser.do?userId="+$(userId).text());
+                            }
+                        </script>
+                        </tbody>
+                    </table>
+                </div>
+                <div id="userfooter" class="panel-footer" style="height:40px;padding:0;" th:fragment="userResult">
+                    <div class="btnGrop" style="display: inline-block; margin-top: 10px;margin-left:20px;">
+                        <input id="addUserbtn" type="button" class="btn btn-success btn-xs" value="新增">
+                        <input id="deleteUserbtn" type="button" class="btn btn-danger btn-xs" value="删除" style="margin-left: 10px" onclick="">
+                        <script language="JavaScript" th:inline="javascript">
+                            $("#addUserbtn").on("click",function(){
+                                $("#newUserModal").modal({
+                                    backdrop: false, // 相当于data-backdrop
+                                    keyboard: false, // 相当于data-keyboard
+                                    show: true, // 相当于data-show
+                                    remote: "" // 相当于a标签作为触发器的href
+                                });
+                            });
+
+                            $("#deleteUserbtn").on("click",function(){
+                                var index = 0;
+                                var arrays = new Array();
+                                $("tr").each(function(){
+                                    $(this).children("td.checked").each(function(){
+                                        if($(this).children().prop("checked")){
+                                            var userId = $(this).parent("tr").find("td.userId").text();
+                                            arrays[index] = userId;
+                                            index++;
+                                        }
+                                    });
+                                });
+                                $("#userResult").load("deleteUserGroup.do?arrays="+arrays);
+                            });
+                        </script>
+                    </div>
+                    <nav aria-label="Page navigation" style="display:inline-block;padding:0;margin-left: 300px;height:40px;">
+                        <ul id="user_pageNation" class="pagination pagination-sm" style="margin-top:5px;line-height:20px">
+                            <li></li>
+                            <li>
+                                <a id="user_PreviousPage" href="#"  aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            <li class="pageNation" th:each="userColumnNum:${userList.column}">
+                                <a class="pageNation" href="#" th:text="${userColumnNum}"></a>
+                            </li>
+                            <li>
+                                <a id="user_NextPage" href="#" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                            <li></li>
+                            <li id="user_skip" style="margin-left:150px;">
+                                到第
+                                <input id="user_SkipNum" type="text" placeholder="" style="width:30px;" maxlength="3">
+                                页
+                                <input id="user_PageSubmit" type="submit" value="跳转" class="btn btn-default" style="height:26px;margin-left:5px;line-height:10px">
+                            </li>
+                            <script language="JavaScript" th:inline="javascript">
+                                $(document).ready(function(){
+                                    if([[${addError}]]!=null){
+                                        alert("用户邮箱已经存在");
+                                    }
+
+                                    $("#user_pageNation").each(function () {
+                                        $(this).find("li.pageNation").each(function(){
+                                            var item = $(this).find("a.pageNation").text();
+                                            if(item == [[${userList.currentnNum}]]){
+                                                $(this).find("a.pageNation").removeAttr("href").removeAttr("onclick");
+                                            }
+                                            else{
+                                                $(this).find("a.pageNation").attr("href","#").attr("onclick","skipUserNumClick(this)");
+                                            }
+                                        });
+                                    });
+                                    var num = [[${userList.currentnNum}]];
+                                    if(num == 1){
+                                        $("#user_PreviousPage").removeAttr("href").removeAttr("onclick");
+                                    }
+                                    else{
+                                        $("#user_PreviousPage").attr("href","#").attr("onclick","previousUserPageClick()");
+                                    }
+                                    if(num === [[${userList.totalPage}]]){
+                                        $("#user_NextPage").removeAttr("href").removeAttr("onclick");
+                                    }
+                                    else{
+                                        $("#user_NextPage").attr("href","#").attr("onclick","nextUserPageClick()");
+                                    }
+                                });
+
+                                function nextUserPageClick(){
+                                    var currentNum = [[${userList.currentnNum}]];
+                                    if(currentNum === [[${userList.totalPage}]]){
+                                        return;
+                                    }
+                                    $("#userResult").load("nextUserPage.do?currentPage="+(currentNum+1)+"&keyValue="+[[${userList.key}]]);
+                                }
+
+                                function previousUserPageClick(){
+                                    var currentNum = [[${userList.currentnNum}]];
+                                    if(currentNum == 1){
+                                        return;
+                                    }
+                                    $("#userResult").load("nextUserPage.do?currentPage="+(currentNum-1)+"&keyValue="+[[${userList.key}]]);
+                                }
+
+                                function skipUserNumClick(item){
+                                    $("#userResult").load("nextUserPage.do?currentPage="+$(item).text()+"&keyValue="+[[${userList.key}]]);
+                                }
+
+                                $("#user_PageSubmit").on("click",function(){
+                                    var sendNum = $("#user_SkipNum").val();
+                                    $("#user_SkipNum").val("");
+                                    if(sendNum!=" "&&sendNum!=null ){
+                                        if(sendNum>=1 && sendNum<=[[${userList.totalPage}]]){
+                                            $("#userResult").load("nextUserPage.do?currentPage="+sendNum+"&keyValue="+[[${userList.key}]]);
+                                        }
+                                    }
+                                });
+                            </script>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <!--维修进度界面-->
+        <div id="serviceProcess" class="tab-pane fade in">
+            <div class="main-panel" style="float:left;display: inline-block;margin-top:20px;margin-left: 30px;">
+                <div style="color: azure;height:60px;width:260px; background: steelblue;border-radius:10px;padding-left:10px;padding-right:20px;margin-top:20px;">
+                    <span class="glyphicon glyphicon-hourglass" style="font-size:large;margin-top:20px;"></span>
+                    <a id="serviceTag_1" href="#equipment" data-toggle="tab" style="font-size: large;color: azure;line-height:60px;text-decoration: none;float: right;">
+                        所有维修任务</a>
+                </div>
+                <div style="color: azure;height:60px;width:260px; background: mediumseagreen;border-radius:10px;padding-left:10px;padding-right:10px;margin-top: 30px;">
+                    <span class="glyphicon glyphicon-wrench" style="font-size:large;margin-top:20px;"></span>
+                    <a id="serviceTag_2" href="#" data-toggle="tab" style="font-size: large;color: azure;line-height:60px;text-decoration: none;float: right;">
+                        已受理的维修任务</a>
+                </div>
+                <div style="color: azure;height:60px;width:260px; background: #761c19;border-radius:10px;padding-left:10px;padding-right:10px;margin-top: 30px;">
+                    <span class="glyphicon glyphicon-wrench" style="font-size:large;margin-top:20px;"></span>
+                    <a id="serviceTag_3" href="#" data-toggle="tab" style="font-size: large;color: azure;line-height:60px;text-decoration: none;float: right;">
+                        未受理的维修任务</a>
+                </div>
+                <script language="JavaScript" th:inline="javascript">
+                    $("#serviceTag_1").on("click",function(){
+                        $("#serviceResult").load("loadServiceData.do?keyValue=All");
+                    });
+
+                    $("#serviceTag_2").on("click",function(){
+                        $("#serviceResult").load("loadServiceData.do?keyValue=已受理");
+                    });
+
+                    $("#serviceTag_3").on("click",function(){
+                        $("#serviceResult").load("loadServiceData.do?keyValue=未受理");
+                    });
+                </script>
+            </div>
+            <div id="serviceResult" class="panel panel-default" style="width:800px;float:right;margin-top: 20px;">
+                <div class="panel-body" style="height:428px;padding:0" th:fragment="serviceResult">
+                    <table class="table table-bordered text-center">
+                        <thead>
+                        <tr>
+                            <td>编号</td>
+                            <td>维修设备</td>
+                            <td>负责人</td>
+                            <td>受理情况</td>
+                            <td>起始日期</td>
+                            <td>结束日期</td>
+                            <td>进度</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="service:${serviceList.dataList}">
+                            <td th:text="${service.serviceId}"></td>
+                            <td th:text="${service.equipName}"></td>
+                            <td th:text="${service.username}== null? '无':${service.username}"></td>
+                            <td th:text="${service.state}"></td>
+                            <td th:text="${service.serviceDate} == null? '未确定':${#dates.format(service.serviceDate,'yyyy-MM-dd')}"></td>
+                            <td th:text="${service.finishDate} == null? '未确定':${#dates.format(service.finishDate,'yyyy-MM-dd')}"></td>
+                            <td>
+                                <div class="process">
+                                    <div class="progress" style="height:15px;padding:0;margin:0;">
+                                        <div id="percent" th:style="'line-height:15px;width:'+${service.process}" class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer" style="height:40px;padding:0" th:fragment="serviceResult">
+                    <nav aria-label="Page navigation" style="padding:0;margin-left: 400px;height:40px;">
+                        <ul id="service_pageNation" class="pagination pagination-sm" style="margin-top:5px;line-height:20px">
+                            <li></li>
+                            <li>
+                                <a id="service_previousPage" href="#"  aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            <li class="pageNation" th:each="columnNum:${serviceList.column}">
+                                <a class="pageNation" href="#" th:text="${columnNum}"></a>
+                            </li>
+                            <li>
+                                <a id="service_nextPage" href="#" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                        <script language="JavaScript" th:inline="javascript">
+                            $(document).ready(function(){
+                                $("#service_pageNation").each(function () {
+                                    $(this).find("li.pageNation").each(function(){
+                                        var item = $(this).find("a.pageNation").text();
+                                        if(item == [[${serviceList.currentnNum}]]){
+                                            $(this).find("a.pageNation").removeAttr("href").removeAttr("onclick");
+                                        }
+                                        else{
+                                            $(this).find("a.pageNation").attr("href","#").attr("onclick","skipServiceNumClick(this)");
+                                        }
+                                    });
+                                });
+                                var num = [[${serviceList.currentnNum}]];
+                                if(num === 1){
+                                    $("#service_PreviousPage").removeAttr("href").removeAttr("onclick");
+                                }
+                                else{
+                                    $("#service_PreviousPage").attr("href","#").attr("onclick","previousServicePageClick()");
+                                }
+                                if(num === [[${serviceList.totalPage}]]){
+                                    $("#service_NextPage").removeAttr("href").removeAttr("onclick");
+                                }
+                                else{
+                                    $("#service_NextPage").attr("href","#").attr("onclick","nextServicePageClick()");
+                                }
+                            });
+
+                            function skipServiceNumClick(button){
+                                $("#serviceResult").load("nextServicePage.do?currentNum="+$(button).text()+"&keyValue="+[[${serviceList.key}]]);
+                            }
+                            function previousServicePageClick(){
+                                var currentNum = [[${serviceList.currentnNum}]];
+                                if(currentNum === 1){
+                                    return;
+                                }
+                                $("#serviceResult").load("nextServicePage.do?currentPage="+(currentNum-1)+"&keyValue="+[[${serviceList.key}]]);
+                            }
+                            function nextServicePageClick(){
+                                var currentNum = [[${serviceList.currentnNum}]];
+                                if(currentNum === [[${serviceList.totalPage}]]){
+                                    return;
+                                }
+                                $("#serviceResult").load("nextServicePage.do?currentPage="+(currentNum+1)+"&keyValue="+[[${serviceList.key}]]);
+                            }
+                        </script>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <!--个人信息设置-->
+        <div id="personal" class="tab-pane fade in">
+            <div class="main-panel" style="float:left;margin-top:50px;margin-left:100px;">
+                <div style="background: mediumseagreen;color: azure;height:60px;width:240px;border-radius: 10px;padding-left:10px;padding-right:10px;">
+                    <span class="glyphicon glyphicon-user" style="font-size: large;margin-top: 20px;"></span>
+                    <a id="personal-tag1" href="#information" data-toggle="tab" style="font-size: large;color: azure;line-height: 60px;text-decoration: none;float: right;">
+                        个人信息编辑
+                    </a>
+                </div>
+                <div th:if="${user.role} == '维修人员'" style="background: darksalmon;color: azure;height:60px;width:240px;border-radius: 10px;padding-left:10px;padding-right:10px;margin-top: 30px;">
+                    <span class="glyphicon glyphicon-wrench" style="font-size: large;margin-top: 20px;"></span>
+                    <a id="personal-tag2" href="#personalTask" data-toggle="tab" style="font-size: large;color: azure;line-height: 60px;text-decoration: none;float: right;">
+                        个人维修任务
+                    </a>
+                </div>
+                <div th:if="${user.role} == '设备管理员'" style="background: darkturquoise;color: azure;height:60px;width:240px;border-radius: 10px;padding-left:10px;padding-right:10px;margin-top: 30px;">
+                    <span class="glyphicon glyphicon-list-alt" style="font-size: large;margin-top: 20px;"></span>
+                    <a id="personal-tag4" href="#confirmTask" data-toggle="tab" style="font-size: large;color: azure;line-height: 60px;text-decoration: none;float: right;">
+                        确认完成名单
+                    </a>
+                </div>
+                <div th:if="${user.role} == '管理员'" style="background: indianred;color: azure;height:60px;width:240px;border-radius: 10px;padding-left:10px;padding-right:10px;margin-top: 30px;">
+                    <span class="glyphicon glyphicon-paperclip" style="font-size: large;margin-top: 20px;"></span>
+                    <a id="personal-tag5" href="#userOperation" data-toggle="tab" style="font-size: large;color: azure;line-height: 60px;text-decoration: none;float: right;">
+                        人员管理
+                    </a>
+                </div>
+                <div style="background: firebrick;color: azure;height:60px;width:240px;border-radius: 10px;padding-left:10px;padding-right:10px;margin-top: 30px;">
+                    <span class="glyphicon glyphicon-log-out" style="font-size: large;margin-top: 20px;"></span>
+                    <a id="personal-tag6" href="#" data-toggle="tab" style="font-size: large;color: azure;line-height: 60px;text-decoration: none;float: right;">
+                        退出系统
+                    </a>
+                </div>
+                <script language="JavaScript" th:inline="javascript">
+                    $("#personal-tag6").on("click",function(){
+                        window.location.href = "loginout.do";
+                    });
+                </script>
+            </div>
+            <div class="content-panel" style="float: right;margin-top:50px;margin-right: 50px">
+                <div class="tab-content">
+                    <!--个人信息展示-->
+                    <div id="information" class="tab-pane fade in active">
+                        <div class="panel panel-info" style="width:600px;">
+                            <div class="panel-heading">
+                                <h5>个人信息</h5>
+                                <div style="float: right; margin-top: -30px;">
+                                    <button class="btn btn-sm btn-default" onclick="editorMessage()">编辑</button>
+                                    <script language="JavaScript" th:inline="javascript">
+                                        function editorMessage() {
+                                            $("#per-username").val($("#per-name").text());
+                                            $("#per-phoneNumber").val($("#per-phone").text());
+                                            $("#per-email").val($("#per-emailAddress").text());
+                                            $("#personalModal").modal({
+                                                backdrop: false, // 相当于data-backdrop
+                                                keyboard: false, // 相当于data-keyboard
+                                                show: true, // 相当于data-show
+                                                remote: "" // 相当于a标签作为触发器的href
+                                            });
+                                        }
+                                    </script>
+                                </div>
+                            </div>
+                            <div id="personalInformation" class="panel-body" th:fragment="personalInformation">
+                                <table style="border:0;margin-left:30px; border-collapse:separate; border-spacing:10px;">
+                                    <tbody>
+                                    <tr >
+                                        <td>工号：</td>
+                                        <td th:text="${user.userId}" style="padding-left:50px;"></td>
+                                    </tr>
+                                    <tr >
+                                        <td>姓名：</td>
+                                        <td id="per-name" th:text="${user.username}" style="padding-left:50px;"></td>
+                                    </tr>
+                                    <tr >
+                                        <td>密码：</td>
+                                        <td id="per-pass" style="padding-left:50px;">**********</td>
+                                    </tr>
+                                    <tr >
+                                        <td>入职时间：</td>
+                                        <td th:text="${#dates.format(user.hireDate,'yyyy-MM-dd')}" style="padding-left:50px;"></td>
+                                    </tr>
+                                    <tr >
+                                        <td>手机号码：</td>
+                                        <td id="per-phone" th:text="${user.phoneNumber}" style="padding-left:50px;"></td>
+                                    </tr>
+                                    <tr >
+                                        <td>邮箱地址：</td>
+                                        <td id="per-emailAddress" th:text="${user.email}" style="padding-left:50px;"></td>
+                                    </tr>
+                                    <tr >
+                                        <td>职位：</td>
+                                        <td th:text="${user.role}" style="padding-left:50px;"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!--维修人员自己维修名单-->
+                    <div id="personalTask" class="tab-pane fade in">
+                        <div class="panel panel-info" style="width:600px;">
+                            <div class="panel-heading">
+                                <h5>个人维修任务</h5>
+                            </div>
+                            <div class="panel-body">
+                                <h5 th:if="${personalTask.serviceMessage}==null" class="text-center">没有相关的维修任务</h5>
+                                <table style="border:0;margin-left:30px; border-collapse:separate; border-spacing:10px;" th:if="${personalTask.serviceMessage}!=null">
+                                    <tbody id="personalTaskBody" th:fragment="personalTaskBody">
+                                    <tr>
+                                        <td >维修编号：</td>
+                                        <td th:text="${personalTask.serviceMessage.serviceId}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>维修设备名称：</td>
+                                        <td th:text="${personalTask.serviceMessage.equipName}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td id="TaskStartDate">维修起始时间：</td>
+                                        <td th:text="${#dates.format(personalTask.serviceMessage.serviceDate,'yyyy-MM-dd')}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td id="TaskfinishDate">预计结束时间：</td>
+                                        <td th:text="${#dates.format(personalTask.serviceMessage.finishDate,'yyyy-MM-dd')}"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <input th:if="${personalTask.serviceMessage}!=null" id="delayfinishBtn" style="float: right;margin-right:30px;" type="button" class="btn btn-danger" value="延长维修时间">
+                                <script language="JavaScript" th:inline="javascript">
+                                    $(document).ready(function(){
+                                        if([[${personalTask.delayTime}]] >= 1){
+                                            $("#delayfinishBtn").hide();
+                                        }
+                                        else{
+                                            $("#delayfinishBtn").show();
+                                        }
+                                    });
+
+                                    $("#delayfinishBtn").on("click",function(){
+                                        var serviceId = $("#personalTaskBody").children("tr").find("td")[1];
+                                        $("#personalTaskBody").load("delayTime.do?serviceId="+$(serviceId).text()+"&userId="+[[${user.userId}]]);
+                                    });
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                    <!--确认维修结束名单-->
+                    <div id="confirmTask" class="tab-pane fade in">
+                        <div id="conformResult" class="panel panel-info" style="width:600px" th:fragment="conformResult">
+                            <table class="table table-bordered text-center">
+                                <thead>
+                                    <tr>
+                                        <td>维修编号</td>
+                                        <td>设备名称</td>
+                                        <td>负责人姓名</td>
+                                        <td>起始时间</td>
+                                        <td>终止时间</td>
+                                        <td>维修确认</td>
+                                    </tr>
+                                </thead>
+                                <tbody id="confirmbody">
+                                    <tr th:each="service:${confirmList.dataList}">
+                                        <td th:text="${service.serviceId}"></td>
+                                        <td th:text="${service.equipName}"></td>
+                                        <td th:text="${service.username}"></td>
+                                        <td th:text="${#dates.format(service.serviceDate,'yyyy-MM-dd')}"></td>
+                                        <td th:text="${#dates.format(service.finishDate,'yyyy-MM-dd')}"></td>
+                                        <td><input type="button" class="btn btn-danger btn-xs" value="确认" onclick="confirmFinish(this)"></td>
+                                    </tr>
+                                </tbody>
+                                <script language="JavaScript" th:inline="javascript">
+                                    $(document).ready(function(){
+                                        if($("#confirmbody").children().length == 0){
+                                            var result = "<tr id='result'><td colspan='6'>没有相关信息</td></tr>";
+                                            $("#confirmbody").append(result);
+                                        }
+                                        else{
+                                            $("#result").remove();
+                                        }
+                                    });
+
+                                    function confirmFinish(button){
+                                        var service = $(button).parent("td").parent("tr").find("td")[0];
+                                        $("#conformResult").load("confirmService.do?serviceId="+$(service).text());
+                                    }
+                                </script>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--模态框(基于管理员修改用户权限)-->
+        <div class="modal fade" id="updateUserModal" tabindex="-1" role="dialog" aria-labelledby="equipModal" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            &times;
+                        </button>
+                        <h4 class="modal-title" id="updateUserlabel">
+                            编辑设备信息
+                        </h4>
+                    </div>
+                    <form class="form-horizontal text-center" role="form">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="control-label col-sm-4" for="up-userId">工号：</label>
+                                <input class="col-sm-5" type="text" id="up-userId" name="up-userId" readonly="readonly">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-4" for="up-username">姓名：</label>
+                                <input id="up-username" class="col-sm-5" name="up-username" type="text" readonly="readonly">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-4" for="up-role">职务：</label>
+                                <select id="up-role" class="col-sm-5" style="height:26px;">
+                                    <option>维修人员</option>
+                                    <option>管理员</option>
+                                    <option>设备管理员</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button id="editorUp" type="button" class="btn btn-primary " data-dismiss="modal" aria-hidden="true">
+                                提交更改
+                            </button>
+                            <script language="JavaScript" th:inline="javascript">
+                                $("#editorUp").on("click",function(){
+                                    var userId = $("#up-userId").val();
+                                    var role = $("#up-role").val();
+
+                                    $("#up-userId").val("");
+                                    $("#up-username").val("");
+                                    $("#up-role").val("");
+
+                                    $("#userResult").load("changeUserRole.do?userId="+userId+"&role="+role);
+                                });
+                            </script>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!--模态框(基于添加新用户)-->
+        <div class="modal fade" id="newUserModal" tabindex="-1" role="dialog" aria-labelledby="equipModal" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            &times;
+                        </button>
+                        <h4 class="modal-title" id="newUserlabel">
+                            编辑设备信息
+                        </h4>
+                    </div>
+                    <form class="form-horizontal text-center" role="form">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="control-label col-sm-4" for="new-username">姓名：</label>
+                                <input id="new-username" class="col-sm-5" name="per-username" type="text">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-4">性别：</label>
+                                <label class="radio-inline " >
+                                    <input type="radio" name="userSex" id="userSex-h" value="男" checked>男
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="userSex" id="userSex-w" value="女">女
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-4" for="new-email">邮箱地址：</label>
+                                <input class="col-sm-5" type="text" id="new-email" name="email">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-4" for="per-phoneNumber">电话号码：</label>
+                                <input class="col-sm-5" type="text" id="new-phoneNumber" name="phoneNumber" >
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-4" for="new-role">职务：</label>
+                                <select id="new-role" class="col-sm-5" style="height:26px;">
+                                    <option>维修人员</option>
+                                    <option>管理员</option>
+                                    <option>设备管理员</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button id="editorNew" type="button" class="btn btn-primary " data-dismiss="modal" aria-hidden="true">
+                                提交更改
+                            </button>
+                            <script language="JavaScript" th:inline="javascript">
+                                $("#editorNew").on("click",function(){
+                                    var username = $("#new-username").val();
+                                    var userSex = $("#userSex-h").prop("checked")? "男":"女";
+                                    var email = $("#new-email").val();
+                                    var phone = $("#new-phoneNumber").val();
+                                    var role = $("#new-role").val();
+
+                                    $("#new-username").val("");
+                                    $("#new-email").val("");
+                                    $("#new-phoneNumber").val("");
+
+                                    $("#userResult").load("addNewUser.do?username="+username+"&userSex="+userSex+"&email="+email+"&phone="+phone+"&role="+role);
+                                });
+                            </script>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!--模态框(基于个人信息的编辑)-->
+        <div class="modal fade" id="personalModal" tabindex="-1" role="dialog" aria-labelledby="equipModal" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            &times;
+                        </button>
+                        <h4 class="modal-title" id="personalModalLabel">
+                            编辑设备信息
+                        </h4>
+                    </div>
+                    <form class="form-horizontal text-center" role="form">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="control-label col-sm-4" for="per-username">姓名：</label>
+                                <input id="per-username" class="col-sm-5" name="per-username" type="text">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-4" for="per-password">电话号码：</label>
+                                <input class="col-sm-5" type="password" id="per-password" name="password" >
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-4" for="per-email">邮箱地址：</label>
+                                <input class="col-sm-5" type="text" id="per-email" name="email">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-4" for="per-phoneNumber">电话号码：</label>
+                                <input class="col-sm-5" type="text" id="per-phoneNumber" name="phoneNumber" >
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button id="editorPer" type="button" class="btn btn-primary " data-dismiss="modal" aria-hidden="true">
+                                提交更改
+                            </button>
+                            <script language="JavaScript" th:inline="javascript">
+                                $("#editorPer").on("click",function(){
+                                    var userId = [[${user.userId}]];
+                                    var username = $("#per-username").val();
+                                    var password = $("#per-password").val();
+                                    var email = $("#per-email").val();
+                                    var phone = $("#per-phoneNumber").val();
+                                    $("#personalInformation").load("updatePersonal.do?userId="+userId+"&username="+username+"&password="+password+"&email="+email+"&phone="+phone);
+                                });
+                            </script>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!--模态框(基于新增设备)-->
+        <div class="modal fade" id="newEquipModal" tabindex="-1" role="dialog" aria-labelledby="equipModal" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            &times;
+                        </button>
+                        <h4 class="modal-title" id="newEquipModalLabel">
+                            编辑设备信息
+                        </h4>
+                    </div>
+                    <form action="" class="form-horizontal text-center" role="form">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="control-label col-sm-4" for="equipName">设备名称：</label>
+                                <input id="new_equipName" class="col-sm-5" name="equipName" type="text">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-4" for="labName">所属实验室：</label>
+                                <select id="new_labName" class="col-sm-5" style="height:26px;">
+                                    <option th:each="lab:${labList}" th:value="${lab.labName}" th:text="${lab.labName}"></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button id="addEquip" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">
+                                提交更改
+                            </button>
+                            <script language="JavaScript" th:inline="javascript">
+                                $("#addEquip").on("click",function(){
+                                    var equipName = $("#new_equipName").val();
+                                    var labName = $("#new_labName").val();
+
+                                    $("#new_equipName").val("");
+                                    $("#new_labName").val("");
+
+                                    $("#equipResult").load("addEquip.do?equipName="+equipName+"&labName="+labName);
+                                });
+                            </script>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!--模态框(基于编辑设备)-->
+        <div class="modal fade" id="equipModal" tabindex="-1" role="dialog" aria-labelledby="equipModal" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            &times;
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel">
+                            编辑设备信息
+                        </h4>
+                    </div>
+                    <form action="" class="form-horizontal text-center" role="form">
+                        <input id="equipId" type="text" placeholder="" hidden="hidden">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="control-label col-sm-4" for="equipName">设备名称：</label>
+                                <input id="equipName" class="col-sm-5" name="equipName" type="text">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-4" for="labName">所属实验室：</label>
+                                <select id="labName" class="col-sm-5" style="height:26px;">
+                                    <option th:each="lab:${labList}" th:value="${lab.labName}" th:text="${lab.labName}"></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button id="editorEquip" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">
+                                提交更改
+                            </button>
+                            <script language="JavaScript" th:inline="javascript">
+                                $("#editorEquip").on("click",function(){
+                                    var equipId = $("#equipId").val();
+                                    var equipName = $("#equipName").val();
+                                    var labName = $("#labName").val();
+
+                                    $("#equipResult").load("updateEquip.do?equipId="+equipId+"&equipName="+equipName+"&labName="+labName);
+                                });
+                            </script>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+
+
