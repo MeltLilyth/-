@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test</title>
+    <link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+        a:hover{text-decoration: none;text-decoration-color: #2e6da4}
+        a:active{text-decoration: none;}
+        a:visited{text-decoration: none;}
+    </style>
+</head>
+<body>
+<script language="JavaScript" th:inline="javascript">
+    $(document).ready(function(){
+        //检测是否为盗录
+        // if([[${user}]] == null){
+        //     alert("您好，由于您的登录方式错误，即将为您返回系统首页");
+        //
+        //     window.location.href = "/returnPage.do";
+        // }
+    });
+</script>
+<div class="header">
+    <nav class="nav navbar-nav navbar-default navbar-fixed-top navbar-inverse">
+        <div class="container-fluid">
+            <div id="brand" class="navbar-brand"><a href="#">实验设备维修管理系统</a></div>
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav " style="padding-left:100px;">
+                    <li><a href="#equipment" data-toggle="tab" >实验设备总览</a></li>
+                    <li><a href="#user" data-toggle="tab" >系统人员管理</a></li>
+                    <li><a href="#service" data-toggle="tab">故障处理进度公示</a></li>
+                    <li><a href="#personal" data-toggle="tab">个人信息管理</a></li>
+                    <script language="JavaScript" th:inline="javascript">
+                        $("#brand").on("click",function(){
+                            $("li").removeClass("active");
+                            $("a").attr("aria-expanded",false);
+                        });
+                    </script>
+                    <li style="margin-left: 500px"><a href="#" id="logOut"><span class="glyphicon glyphicon-log-out"></span></a></li>
+                </ul>
+            </div>
+
+        </div>
+    </nav>
+</div>
+<div class="container" style="margin-top: 100px;">
+    <div class="tab-content">
+        <!--设备管理 -->
+        <div id="equipment" class="equipment tab-pane fade">
+            <div id="equipSearchPanel">
+                <form action="" class="equipSearch" role="search">
+                    <div class="input-group">
+                        <div class="input-group-addon"><span class="glyphicon glyphicon-search"></span></div>
+                        <input class="form-control" type="text" placeholder="请输入设备id/名称" style="width:290px;">
+                    </div>
+                </form>
+            </div>
+            <div id="equipResult" style="margin-top: 20px;">
+                <table class="table text-center">
+                    <caption class="text-center"><h4>实验设备总览</h4></caption>
+                    <thead style="border-bottom: 5px ridge">
+                        <tr>
+                            <td>#</td>
+                            <td>设备编号</td>
+                            <td>设备名称</td>
+                            <td>所属实验室</td>
+                            <td>购买日期</td>
+                            <td>上次维修日期</td>
+                            <td>设备状态</td>
+                            <td colspan="3">操作</td>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tfoot></tfoot>
+                </table>
+            </div>
+        </div>
+        <!--系统的人员管理不会有太多的人，所以针对人员管理并不会做分页功能-->
+        <div id="user" class="user tab-pane fade">
+            <table class="table text-center">
+                <caption class="text-center"><h4>系统人员管理</h4></caption>
+                <thead>
+                    <tr>
+                        <td>#</td>
+                        <td>人员Id</td>
+                        <td>人员姓名</td>
+                        <td>性别</td>
+                        <td>电话</td>
+                        <td>邮箱地址</td>
+                        <td>受雇日期</td>
+                        <td>职位</td>
+                        <td colspan="2">操作</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="userTr" th:each="">
+                        <td><input id="userCheckbox" type="checkbox"></td>
+                        <td>人员Id</td>
+                        <td>人员姓名</td>
+                        <td>性别</td>
+                        <td>电话</td>
+                        <td>邮箱地址</td>
+                        <td>受雇日期</td>
+                        <td class="role">管理员</td>
+                        <td class="setAdmin"><input type="button" class="btn btn-xs btn-success" value="设置为管理员"></td>
+                        <td><input type=button class="btn btn-xs btn-danger" value="删除"></td>
+                        <script language="JavaScript" th:inline="javascript">
+
+                        </script>
+                    </tr>
+                    <script language="JavaScript" th:inline="javascript"></script>
+                </tbody>
+                <tfoot></tfoot>
+                <script language="JavaScript" th:inline="javascript"></script>
+            </table>
+        </div>
+        <!--个人信息管理-->
+        <div id="personal" class="tab-pane fade in active">
+            <h3 class="text-center">欢迎您，冷笑の游里</h3>
+            <div id="left-panel" style="float:left;">
+                <div class="panel panel-info" style="width:800px;margin-top: 20px;">
+                    <div class="panel-heading">
+                        <h5>个人信息</h5>
+                        <input class="btn btn-default" type="button" value="编辑" style="float:right;margin-top: -35px;">
+                    </div>
+                    <div class="panel-body">
+                        <table class="text-center" style="border:0;margin-left:30px; border-collapse:separate; border-spacing:10px;">
+                            <tbody>
+                            <tr >
+                                <td>工号：</td>
+                                <td th:text="${user.userId}" style="padding-left:50px;"></td>
+                                <td style="padding-left:20px;">姓名：</td>
+                                <td id="per-name" th:text="${user.username}" style="padding-left:50px;"></td>
+                            </tr>
+                            <tr >
+                                <td>密码：</td>
+                                <td id="per-pass" style="padding-left:50px;">**********</td>
+                                <td style="padding-left:20px;">职位：</td>
+                                <td th:text="${user.role}" style="padding-left:50px;"></td>
+                            </tr>
+                            <tr >
+                                <td>手机号码：</td>
+                                <td id="per-phone" th:text="${user.phoneNumber}" style="padding-left:50px;"></td>
+                            </tr>
+                            <tr >
+                                <td>邮箱地址：</td>
+                                <td id="per-emailAddress" th:text="${user.email}" style="padding-left:50px;"></td>
+                            </tr>
+                            <tr>
+                                <td>入职时间：</td>
+                                <td th:text="${#dates.format(user.hireDate,'yyyy-MM-dd')}" style="padding-left:50px;"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!--角色为维修人员时显示-->
+                <div th:if="${user.role} == '维修人员'" class="panel panel-danger" style="width:800px; margin-top: 40px;">
+                    <div class="panel-heading"><h5>个人任务通知</h5></div>
+                    <div class="panel-body">
+                        <h4 class="text-center">当前维修任务</h4>
+                        <table style="border:0;margin-left:30px; border-collapse:separate; border-spacing:10px;" th:if="${personalTask.serviceMessage}!=null">
+                            <tbody id="personalTaskBody" th:fragment="personalTaskBody">
+                            <tr>
+                                <td >维修编号：</td>
+                                <td th:text="${personalTask.serviceMessage.serviceId}"></td>
+                            </tr>
+                            <tr>
+                                <td>维修设备名称：</td>
+                                <td th:text="${personalTask.serviceMessage.equipName}"></td>
+                            </tr>
+                            <tr>
+                                <td id="TaskStartDate">维修起始时间：</td>
+                                <td th:text="${#dates.format(personalTask.serviceMessage.serviceDate,'yyyy-MM-dd')}"></td>
+                            </tr>
+                            <tr>
+                                <td id="TaskfinishDate">预计结束时间：</td>
+                                <td th:text="${#dates.format(personalTask.serviceMessage.finishDate,'yyyy-MM-dd')}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!--角色为管理人员时展示-->
+                <div th:if="${user.role} == '管理员'" class="panel panel-warning" style="width:800px;margin-top:40px;">
+                    <div class="panel panel-heading"><h4 class="text-center">发表公告</h4></div>
+                    <form action="" role="form" class="form">
+                        <input  name="title" type="text" style="margin-left: 100px;width:600px;border-radius: 6px;" placeholder="公告标题">
+                        <textarea id="publish" placeholder="公告内容" maxlength="300" rows="4" style="resize: none;width:600px;margin-left: 100px;border-radius: 6px;margin-top: 20px;"></textarea><br>
+                        <input type="submit" class="btn btn-info" value="发表" style="margin-left:600px;width:100px;">
+                    </form>
+                </div>
+            </div>
+            <div class="rightPanel" style="float:right;margin-top: 20px;">
+                <div class="panel panel-info" style="width:300px; border: 1px">
+                    <div class="panel-heading"><h5>公告列表</h5></div>
+                    <div class="panel panel-body" style="height:500px;"></div>
+                </div>
+            </div>
+        </div>
+        <!--维修进程管理-->
+        <div id="service" class="service tab-pane fade">
+            <div id="search-panel">
+                <form action="" class="equipSearch" role="search">
+                    <div class="input-group">
+                        <div class="input-group-addon"><span class="glyphicon glyphicon-search"></span></div>
+                        <input class="form-control" type="text" placeholder="请输入设备id/名称" style="width:290px;">
+                    </div>
+                </form>
+            </div>
+            <div id="serviceResult" style="margin-top: 30px;margin-left: 100px">
+                <table class="table text-center" style="width:870px;height:400px;">
+                    <caption class="text-center"><h4>维修信息一览</h4></caption>
+                    <thead style="border-bottom:5px ridge;">
+                    <tr>
+                        <td>维修编号</td>
+                        <td>维修设备名称</td>
+                        <td>负责人</td>
+                        <td>维修起始时间</td>
+                        <td>维修结束时间</td>
+                        <td>维修进度时间</td>
+                        <td>维修进度</td>
+                    </tr>
+                    </thead>
+                    <tbody id="serviceBody">
+
+                    </tbody>
+                    <script language="JavaScript" th:inline="javascript">
+                        $(document).ready(function(){
+                            //测试使用，之后需要更改判断条件
+                            var result = "<tr id='emptyService'><td class='text-center' colspan='7'>没有相关信息</td></tr>";
+                            if($("#serviceBody").children().length == 0){
+                                $("#serviceBody").append(result);
+                                $("#serviceFoot").hide();
+                            }
+                            else{
+                                $("#emptyService").hide();
+                                $("#serviceFoot").show();
+                            }
+                        });
+                    </script>
+                    <tfoot id="serviceFoot">
+                    <tr>
+                        <td colspan="7">
+                            <div class="pagination" style="margin-top:0; float: right;margin-right: 10px;">
+                                <nav aria-label="Page navigation" style="padding: 0;">
+                                    <ul class="pagination" style="margin-top: 0">
+                                        <li>
+                                            <a href="#" aria-label="Previous">
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                        </li>
+                                        <li><a href="#">1</a></li>
+                                        <li><a href="#">2</a></li>
+                                        <li><a href="#">3</a></li>
+                                        <li><a href="#">4</a></li>
+                                        <li><a href="#">5</a></li>
+                                        <li>
+                                            <a href="#" aria-label="Next">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </td>
+                    </tr>
+                    </tfoot>
+                </table>
+                <table id="confirmResult" class="table text-center" style="width:870px;height:400px;">
+                    <caption class="text-center"><h4>维修结果确认</h4></caption>
+                    <thead style="border-bottom:5px ridge;">
+                        <tr>
+                            <td>维修编号</td>
+                            <td>维修设备</td>
+                            <td>负责人</td>
+                            <td>维修起始时间</td>
+                            <td>维修结束时间</td>
+                            <td>操作</td>
+                        </tr>
+                    </thead>
+                    <tbody id="confirmBody"></tbody>
+                    <tfoot id="confirmFoot">
+                        <tr>
+                        <td colspan="7">
+                            <div class="pagination" style="margin-top:0; float: right;margin-right: 10px;">
+                                <nav aria-label="Page navigation" style="padding: 0;">
+                                    <ul class="pagination" style="margin-top: 0">
+                                        <li>
+                                            <a href="#" aria-label="Previous">
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                        </li>
+                                        <li><a href="#">1</a></li>
+                                        <li><a href="#">2</a></li>
+                                        <li><a href="#">3</a></li>
+                                        <li><a href="#">4</a></li>
+                                        <li><a href="#">5</a></li>
+                                        <li>
+                                            <a href="#" aria-label="Next">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </td>
+                    </tr>
+                    </tfoot>
+                    <script language="JavaScript" th:inline="javascript">
+                        $(document).ready(function(){
+                            //测试使用，之后需要更改判断条件
+                            var result = "<tr id='emptyConfirm'><td colspan='6' class='text-center'>没有相关信息</td></tr>";
+                            if($("#confirmBody").children().length == 0){
+                                $("#confirmBody").append(result);
+                                $("#confirmFoot").hide();
+                            }
+                            else{
+                                $("#emptyConfirm").hide();
+                                $("#confirmFoot").show();
+                            }
+                        });
+                    </script>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
